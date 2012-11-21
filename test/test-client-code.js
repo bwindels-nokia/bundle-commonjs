@@ -36,16 +36,17 @@ module.exports = testCase({
         var predefinedModules = {
             '_' : function() {return 'I am underscore!';}.toString()
         };
-        var bundleSourceCode = createClientSource(modules, aliases, predefinedModules);
+        var bundleSourceCode = createClientSource(modules, aliases, predefinedModules, 'myRequireFunction');
         //assign result of hello function to global variable, so we can get it from there
-        bundleSourceCode = bundleSourceCode + 'var hello = require("a").hello("world");';
+        bundleSourceCode = bundleSourceCode + 'var hello = myRequireFunction("a").hello("world");';
         //try use a predefined module
-        bundleSourceCode = bundleSourceCode + 'var underscoreSays = require("_")();';
+        bundleSourceCode = bundleSourceCode + 'var underscoreSays = myRequireFunction("_")();';
         //run code in new vm
         
         var vmGlobalObject = {};
         vm.runInNewContext(bundleSourceCode, vmGlobalObject);
         
+        test.strictEqual(typeof vmGlobalObject.myRequireFunction, 'function', 'the external (global) name for the require function should be what we passed');
         test.strictEqual(vmGlobalObject.hello, 'hello world!, I am B', 'global variable in vm was not correctly assigned');
         test.strictEqual(vmGlobalObject.underscoreSays, 'I am underscore!', 'global variable from predefined module in vm was not correctly assigned');
         
