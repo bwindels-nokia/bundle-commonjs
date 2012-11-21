@@ -48,9 +48,6 @@ module.exports = testCase({
         
         var resolver = function(normalizedName) {
             var m = modules[normalizedName];
-            if(!m) {
-                throw new Error('could not find module ' + normalizedName);
-            }
             
             return {
                 read: function(callback) {
@@ -58,6 +55,9 @@ module.exports = testCase({
                 },
                 fileName: function() {
                     return  m.normalizedName;
+                },
+                canRead: function() {
+                    return typeof m !== 'undefined';
                 }
             };
         };
@@ -67,8 +67,10 @@ module.exports = testCase({
         
         var builder = new ModuleBuilder(resolver, childModuleFinder);
         builder.ignore(['_']);
-        builder.addModule('a', function() {
-            builder.addModule('x', function() {
+        builder.addModule('a', null, function(err) {
+            test.ifError(err);
+            builder.addModule('x', null, function(err) {
+                test.ifError(err);
                 //the problem here is that a module goes by multiple names. We want to be able to resolve a normalized name together with a basePath to a filename (to handle the case of relative require paths, that depend on the directory of the module where the require statement occurs).
                 //If we resolve node_modules module names to their filename for the moduleMap, we lose this property. There is no way to go from require('module') to define('/base/path', 'module', function(...) {}) if we store this under the key /base/path/module
                 //the best solution would be to alias the short and long name to the same entry
@@ -114,6 +116,9 @@ module.exports = testCase({
                 },
                 fileName: function() {
                     return  normalizedName;
+                },
+                canRead: function() {
+                    return typeof m !== 'undefined';
                 }
             };
         };
@@ -122,7 +127,7 @@ module.exports = testCase({
         };
         
         var builder = new ModuleBuilder(resolver, childModuleFinder);
-        builder.addModule('/base/main', function() {
+        builder.addModule('/base/main', null, function() {
             var resolvedModules = builder.modules();
             test.strictEqual(resolvedModules.length, 3, '3 modules should have been resolved for /base/main');
             resolvedModules.forEach(function(m) {
