@@ -1,11 +1,16 @@
 {
-  "name": "bundle-commonjs",
-  "version": "0.0.1",
-  "author": "Bruno Windels <bruno.windels@gmail.com>",
-  "description": "Library to join commonjs(node) modules and the modules they depend on in one bundle to run it in environments that don't support the CommonJS module system (the browser)",
-  "main": "./lib/bundle-builder.js",
-  "dependencies" : {},
-  "engines": {
-    "node": ">=0.6.0"
-  }
+	"name": "bundle-commonjs",
+	"version": "0.0.1",
+	"author": "Bruno Windels <bruno.windels@gmail.com>",
+	"description": "Library to join commonjs(node) modules and the modules they depend on in one bundle to run it in environments that don't support the CommonJS module system (the browser)",
+	"main": "./lib/bundle-builder.js",
+	"dependencies" : {
+		"async": "0.x"
+	},
+	"engines": {
+		"node": ">=0.6.0"
+	},
+	"devDependencies": {
+		"nodeunit": ">0.0.0"
+	}
 }
