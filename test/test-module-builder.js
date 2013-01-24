@@ -6,7 +6,7 @@ var ModuleBuilder = require('../lib/module-builder').ModuleBuilder;
 var normalize = require('../lib/common').normalize;
 var requireStatementsFinder = require('../lib/module-builder').requireStatementsFinder;
 var partsInCommon = require('../lib/module-builder').partsInCommon;
-var createFsResolver = require('../lib/module-builder').fsResolver;
+var createFsResolver = require('../lib/module-resolvers').createFsResolver;
 
 module.exports = testCase({
     'test ProcessModuleSet.item': function(test) {
