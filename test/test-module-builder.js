@@ -6,6 +6,7 @@ var ModuleBuilder = require('../lib/module-builder').ModuleBuilder;
 var normalize = require('../lib/common').normalize;
 var requireStatementsFinder = require('../lib/module-builder').requireStatementsFinder;
 var partsInCommon = require('../lib/module-builder').partsInCommon;
+var createFsResolver = require('../lib/module-builder').fsResolver;
 
 module.exports = testCase({
     'test ProcessModuleSet.item': function(test) {
@@ -157,6 +158,11 @@ module.exports = testCase({
         test.strictEqual(partsInCommon("/home/wally/docs", "/home/wally/pics"), 2, 'two parts in common');
         test.strictEqual(partsInCommon("/home/wally/dev", "/home/wally/dev"), 3, 'three parts in common');
         
+        test.done();
+    },
+    "test fsResolver": function(test) {
+        var resolver = createFsResolver('utf8');
+        test.strictEqual(resolver('crypto').canRead(), false, 'built in node modules should not report that they can be read');
         test.done();
     }
 });
