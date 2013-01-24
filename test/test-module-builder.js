@@ -106,10 +106,7 @@ module.exports = testCase({
         
         var resolver = function(normalizedName) {
             var m = modules[normalizedName];
-            if(!m) {
-                throw new Error('could not find module ' + normalizedName);
-            }
-            
+
             return {
                 read: function(callback) {
                     return callback(m.deps);
@@ -133,7 +130,11 @@ module.exports = testCase({
             resolvedModules.forEach(function(m) {
                 var moduleDef = modules[m.normalizedName];
                 test.strictEqual(typeof m, 'object', 'resolved modules should be an object');
-                test.strictEqual(m.basePath, moduleDef.basePath, 'basePath is wrong for module ' + m.normalizedName);
+                if(m.normalizedName === '/modules/date') {
+                    test.strictEqual(typeof m.basePath, 'undefined', 'basePath should not be included for modules that have no relative require statements');
+                } else {
+                    test.strictEqual(m.basePath, moduleDef.basePath, 'basePath is wrong for module ' + m.normalizedName);
+                }
             });
             test.done();
         });
